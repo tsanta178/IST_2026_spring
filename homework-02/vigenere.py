@@ -1,46 +1,51 @@
+import caesar
 def encrypt_vigenere(plaintext: str, keyword: str) -> str:
+    """
+    Encrypts plaintext using a Vigenere cipher.
+
+    >>> encrypt_vigenere("PYTHON", "A")
+    'PYTHON'
+    >>> encrypt_vigenere("python", "a")
+    'python'
+    >>> encrypt_vigenere("ATTACKATDAWN", "LEMON")
+    'LXFOPVEFRNHR'
+    """
     ciphertext = ""
-    keyword = keyword.lower()
-    key_len = len(keyword)
-    key_index = 0
-    
-    for ch in plaintext:
-        if ch.isalpha():
-            shift = ord(keyword[key_index % key_len]) - ord('a')
-            
-            if ch.isupper():
-                new_pos = (ord(ch) - ord('A') + shift) % 26
-                ciphertext += chr(ord('A') + new_pos)
-            else:
-                new_pos = (ord(ch) - ord('a') + shift) % 26
-                ciphertext += chr(ord('a') + new_pos)
-            
-            key_index += 1
-        else:
-            ciphertext += ch
-    
-    return ciphertext
+    lower = string.ascii_lowercase
+    upper = string.ascii_uppercase
+    n = len(keyword)
+    cipher_text = list(plaintext)
+    for i in range(n):
+      if keyword[i] in lower:
+        shift = lower.find(keyword[i])
+      else:
+        shift = upper.find(keyword[i])
+      cipher_text[i::n] = caesar.encrypt_caesar(plaintext[i::n], shift)
+    cipher_text = "".join(cipher_text)
+    return cipher_text
 
 
 def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
+    """
+    Decrypts a ciphertext using a Vigenere cipher.
+
+    >>> decrypt_vigenere("PYTHON", "A")
+    'PYTHON'
+    >>> decrypt_vigenere("python", "a")
+    'python'
+    >>> decrypt_vigenere("LXFOPVEFRNHR", "LEMON")
+    'ATTACKATDAWN'
+    """
     plaintext = ""
-    keyword = keyword.lower()
-    key_len = len(keyword)
-    key_index = 0
-    
-    for ch in ciphertext:
-        if ch.isalpha():
-            shift = ord(keyword[key_index % key_len]) - ord('a')
-            
-            if ch.isupper():
-                new_pos = (ord(ch) - ord('A') - shift) % 26
-                plaintext += chr(ord('A') + new_pos)
-            else:
-                new_pos = (ord(ch) - ord('a') - shift) % 26
-                plaintext += chr(ord('a') + new_pos)
-            
-            key_index += 1
-        else:
-            plaintext += ch
-    
+    lower = string.ascii_lowercase
+    upper = string.ascii_uppercase
+    n = len(keyword)
+    plaintext = list(ciphertext)
+    for i in range(n):
+      if keyword[i] in lower:
+        shift = lower.find(keyword[i])
+      else:
+        shift = upper.find(keyword[i])
+      plaintext[i::n] = caesar.encrypt_caesar(ciphertext[i::n], -shift)
+    plaintext = "".join(plaintext)
     return plaintext
